@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RaspberryPad - Web</title>
+    <link rel="stylesheet" href="https://npm.sourcegcdn.com/mdui@1.0.2/dist/css/mdui.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="mdui-theme-accent-red mdui-theme-primary-light-blue mdui-appbar-with-toolbar mdui-bottom-nav-fixed">
+    <div class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-theme">
+            <a href="javascript:;" class="mdui-typo-headline" style="margin-left: 1.5rem;">RaspberryPad</a>
+            <div class="mdui-toolbar-spacer"></div>
+            <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-menu="{target: '#top_menu'}">
+            <i class="mdui-icon material-icons">more_vert</i>
+            </a>
+            <ul class="mdui-menu" id="top_menu">
+                <li class="mdui-menu-item">
+                  <a href="javascript:window.location.reload();" class="mdui-ripple">刷新页面</a>
+                </li>
+                <li class="mdui-menu-item" disabled>
+                  <a href="javascript:;">帮助与反馈</a>
+                </li>
+                <li class="mdui-menu-item">
+                  <a href="javascript:cgto('init_page');" class="mdui-ripple">重新初始化</a>
+                </li>
+                <li class="mdui-divider"></li>
+                <li class="mdui-menu-item">
+                  <a href="javascript:localStorage.clear();window.location.reload();" class="mdui-ripple">清理缓存</a>
+                </li>
+              </ul>
+        </div>
+    </div>
+    
+    <div class="mdui-bottom-nav mdui-bottom-nav-text-auto mdui-color-light-blue">
+        <a href="javascript:cgto('status_page');" id="btn_status" class="mdui-ripple mdui-ripple-white mdui-bottom-nav-active">
+          <i class="mdui-icon material-icons">center_focus_weak</i>
+          <label>状态</label>
+        </a>
+        <a href="javascript:cgto('ctrl_page');" id="btn_ctrl" class="mdui-ripple mdui-ripple-white">
+          <i class="mdui-icon material-icons">gps_fixed</i>
+          <label>控制</label>
+        </a>
+        <a href="javascript:cgto('config_page');" id="btn_config" class="mdui-ripple mdui-ripple-white">
+          <i class="mdui-icon material-icons">settings</i>
+          <label>设置</label>
+        </a>
+    </div>
+
+    
+
+    <!-- 初始化页面 -->
+    <div id="init_page" style="display: none;opacity: 0;">
+        <div class="mdui-card pg-card">
+
+            <!-- 卡片的标题和副标题 -->
+            <div class="mdui-card-primary">
+              <div class="mdui-card-primary-title">您还没有初始化！</div>
+              <div class="mdui-card-primary-subtitle">您需要填写被控端相关信息以继续。</div>
+            </div>
+            <div class="mdui-card-content mdui-typo" style="padding-top: 0;">
+                <div class="mdui-textfield mdui-textfield-floating-label">
+                    <label class="mdui-textfield-label">被控端地址 (http(s)://[DOMAIN]:[PORT])</label>
+                    <input class="mdui-textfield-input" id="init_address" type="text"/>
+                </div>
+                <div class="mdui-textfield mdui-textfield-floating-label">
+                    <label class="mdui-textfield-label">被控端 APIKEY</label>
+                    <input class="mdui-textfield-input" id="init_apikey" type="text"/>
+                </div>
+            </div>
+          
+            <!-- 卡片的按钮 -->
+            <div class="mdui-card-actions">
+              <button class="mdui-btn mdui-ripple" onclick="init();">继续</button>
+            </div>
+          
+          </div>
+    </div>
+    <!-- 状态页面 默认显示 -->
+    <div id="status_page">
+        <div class="mdui-card pg-card">
+
+            <!-- 卡片的标题和副标题 -->
+            <div class="mdui-card-primary">
+              <div class="mdui-card-primary-title">运行状态: <span id="now_status">获取中...</span></div>
+              <div class="mdui-card-primary-subtitle"><span id="status_word"></span></div>
+            </div>
+            <div class="mdui-card-content mdui-typo" style="padding-top: 0;">
+                <h5>互联网状态: <span id="st_internet">获取中...</span></h5>
+                <h5>被控端地址: <span id="st_ctrl_address">获取中...</span></h5>
+                <h5>ID 1 可用时间: <span id="st_usr1time">获取中...</span></h5>
+                <h5>ID 2 可用时间: <span id="st_usr2time">获取中...</span></h5>
+                <h5>ID 3 可用时间: <span id="st_usr3time">获取中...</span></h5>
+            </div>
+          
+            <!-- 卡片的按钮 -->
+            <div class="mdui-card-actions">
+              <button class="mdui-btn mdui-ripple" onclick="shutdown();">关机</button>
+              <button class="mdui-btn mdui-ripple" onclick="stopShutdown();">停止关机</button>
+            </div>
+          
+          </div>
+    </div>
+
+    <div id="ctrl_page" style="display: none;opacity: 0;">
+        <div class="mdui-card pg-card">
+
+            <!-- 卡片的标题和副标题 -->
+            <div class="mdui-card-primary">
+              <div class="mdui-card-primary-title">控制设备</div>
+              <div class="mdui-card-primary-subtitle">对被控设备进行控制。</div>
+            </div>
+            <div class="mdui-card-content mdui-typo" style="padding-top: 0;">
+                <div style="margin: 0 auto;text-align: center;">
+                    <button class="mdui-btn mdui-ripple mdui-color-theme-accent" onclick="shutdown();">关机</button>
+                    <button class="mdui-btn mdui-ripple mdui-color-theme-accent" onclick="stopShutdown();">停止关机</button>
+                    <button class="mdui-btn mdui-ripple mdui-color-theme-accent" onclick="tmptime();">临时调整使用时间</button>
+                </div>
+                <div style="margin: 10px auto;text-align: center;">
+                    <button class="mdui-btn mdui-ripple mdui-color-theme-accent" onclick="cgShutdownMode();">更改关机模式</button>
+                    <button class="mdui-btn mdui-ripple mdui-color-theme-accent" onclick="cgBlacklist();">屏蔽网站列表</button>
+                </div>
+            </div>
+          
+          </div>
+    </div>
+
+    <div id="config_page" style="display: none;opacity: 0;">
+        <div class="mdui-card pg-card">
+
+            <!-- 卡片的标题和副标题 -->
+            <div class="mdui-card-primary">
+              <div class="mdui-card-primary-title">设置</div>
+              <div class="mdui-card-primary-subtitle">编辑被控端配置</div>
+            </div>
+            <div class="mdui-card-content mdui-typo" style="padding-top: 0;">
+                <div class="mdui-textfield code_input">
+                    <textarea class="mdui-textfield-input" id="config_area" rows="5" placeholder="从被控端同步配置或填写配置信息"></textarea>
+                  </div>
+            </div>
+          
+            <!-- 卡片的按钮 -->
+            <div class="mdui-card-actions">
+              <button class="mdui-btn mdui-ripple" onclick="syncConfig();">同步配置</button>
+              <button class="mdui-btn mdui-ripple" onclick="setConfig();">提交配置</button>
+            </div>
+          
+          </div>
+    </div>
+
+    <script src="https://npm.sourcegcdn.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
+    <script src="https://npm.sourcegcdn.com/askmeqa-src@1.1.30/js/md5.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

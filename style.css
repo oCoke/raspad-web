@@ -1,0 +1,36 @@
+.pg-card {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#status_page {
+    margin: 30px 10px;
+    transition: color 0.25s, background-color 0.25s, box-shadow 0.25s, left 0.25s, opacity 0.25s, top 0.25s, width 0.25s;
+}
+
+#init_page {
+    margin: 30px 10px;
+    transition: color 0.25s, background-color 0.25s, box-shadow 0.25s, left 0.25s, opacity 0.25s, top 0.25s, width 0.25s;
+}
+
+#ctrl_page {
+    margin: 30px 10px;
+    transition: color 0.25s, background-color 0.25s, box-shadow 0.25s, left 0.25s, opacity 0.25s, top 0.25s, width 0.25s;
+}
+
+#config_page {
+    margin: 30px 10px;
+    transition: color 0.25s, background-color 0.25s, box-shadow 0.25s, left 0.25s, opacity 0.25s, top 0.25s, width 0.25s;
+}
+
+.pg-card {
+    margin: auto;
+}
+
+body {
+    margin: auto;
+}
+
+.code_input {
+    font-family: Consolas,Courier,'Courier New',monospace;
+}
